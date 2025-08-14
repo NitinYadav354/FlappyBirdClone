@@ -5,6 +5,7 @@ using TMPro;
 
 public class Score : MonoBehaviour
 {
+    bool isUpdated = false;
     public TMP_Text ScoreText;
     public int CurScore = 0;
     public PipeSpawner PS;
@@ -13,18 +14,23 @@ public class Score : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip GmHs;
     private int oldHighScore;
+    public PlayerController player;
 
-    private void OnTriggerEnter2D(Collider2D other) {
-        CurScore+=1;
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        CurScore += 1;
         UpdateScoreText();
         checkHighScore();
-        if(CurScore%10==0 && CurScore!=0){
-            PS.spawnRate=Mathf.Max(1.5f, PS.spawnRate - 0.1f);
+        if (CurScore % 10 == 0 && CurScore != 0)
+        {
+            PS.spawnRate = Mathf.Max(1.5f, PS.spawnRate - 0.1f);
             PS.UpdateSpawnRate();
+            player.gS += 0.1f;
         }
     }
 
     private void Start() {
+        isUpdated = false;
         UpdateScoreText();
         HighScore = PlayerPrefs.GetInt("HighScore", 1);
         UpdateHighScoreText();
@@ -41,14 +47,16 @@ public class Score : MonoBehaviour
     }
 
     void checkHighScore(){
-        if(CurScore>HighScore){
+        if(CurScore>HighScore) {
             HighScore = CurScore;
             PlayerPrefs.SetInt("HighScore", HighScore);
             PlayerPrefs.Save();
             UpdateHighScoreText();
-            if(HighScore>oldHighScore){
+            if (HighScore > oldHighScore && isUpdated == false)
+            {
                 audioSource.PlayOneShot(GmHs);
-            }            
+                isUpdated = true;
+            }
         }
     }
 }

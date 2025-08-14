@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public float gS = 0.5f;
     public float jumpforce = 10f;
     public Sprite wingsUpSprite;
     public Sprite wingsDownSprite;
@@ -23,6 +24,8 @@ public class PlayerController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         gameovermanager = FindObjectOfType<GameOverManager>();
         audioSource = GetComponent<AudioSource>();
+        rb.gravityScale = gS;
+
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
